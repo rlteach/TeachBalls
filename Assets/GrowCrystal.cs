@@ -12,7 +12,7 @@ public class GrowCrystal : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		mT = GetComponent<Terrain> ();
-		InvokeRepeating ("Grow", 0, 5f);
+		InvokeRepeating ("Grow", 0, 2f);
 	}
 
 	void	Grow() {
