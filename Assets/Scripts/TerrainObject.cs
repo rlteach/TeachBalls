@@ -6,6 +6,7 @@ public abstract class TerrainObject : MonoBehaviour {           //This is only a
     protected   Animator mANI;          //Animator reference
     protected   MeshRenderer mMR;       //Mesh renderer reference
 
+
     // Use this for initialization
     protected virtual void Start () {               //Protected means a dereived class can access but nothign beyond
         mANI = GetComponent<Animator>();
@@ -13,7 +14,14 @@ public abstract class TerrainObject : MonoBehaviour {           //This is only a
         mANI.SetFloat("Speed", 0f);     //Stop Animation
         transform.position=GameManager.TC.MoveToGround(transform.position);
     }
+
     public override string ToString() {
         return base.ToString();
     }
+
+	public	virtual	void	PlayerCollided() {
+		GetComponent<Collider> ().enabled = false;
+		mANI.SetTrigger ("Eaten");
+		Debug.Log ("PlayerCollided:TerrainObject");
+	}
 }

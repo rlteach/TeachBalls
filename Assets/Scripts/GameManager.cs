@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour {
 
     private static	GameManager	GM;     //Internal link to GM instance used by static methods
 
-    private List<TerrainObject>   mTerrainObjectList;
+    private List<TerrainObject>   mTerrainObjectList;		//List of objects in scene
 
 	//Set up game manager singleton
 	void Awake () {
@@ -46,6 +46,12 @@ public class GameManager : MonoBehaviour {
         }
     }  
 
+	public	static	int		ObjectCount {	//Get number of objects in list
+		get {
+			return	GM.mTerrainObjectList.Count;
+		}
+	}
+
 	public  static	void	CreateCrystal() {
         Vector3 tPosition = TC.RandomPosition(PC.transform.position,10f);
         Crystal mCrystal = TC.SpawnTerrainObject<Crystal>(tPosition, GM.CrystalPrefab);
@@ -60,9 +66,8 @@ public class GameManager : MonoBehaviour {
 
     static  public  string  DebugText {         //Make up Debug text for display
         get {
-            int tCount = GM.mTerrainObjectList.Count;
             StringBuilder tBuilder = new StringBuilder();           //Much faster than string+string
-            tBuilder.Append(string.Format("{0} Items\n", tCount));
+            tBuilder.Append(string.Format("{0} Items\n", ObjectCount));
             foreach( TerrainObject tTO in GM.mTerrainObjectList) {
                 tBuilder.Append(string.Format("{0}\n", tTO));
             }

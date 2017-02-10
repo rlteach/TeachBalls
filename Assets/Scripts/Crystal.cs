@@ -5,8 +5,8 @@ public class Crystal : TerrainObject {
 
 	public	float	KillTime=10.0f;
 
-	public	Color	FromColour;
-	public	Color	ToColour;
+	public	Color	FromColour=Color.cyan;
+	public	Color	ToColour=Color.yellow;
 
 	protected override void 	Start () {
         base.Start();                       //Ensure base class Start() runs
@@ -17,9 +17,9 @@ public class Crystal : TerrainObject {
 		mMR.material.color = Vector4.Lerp (FromColour, ToColour, Mathf.Sin (vTime * Mathf.PI * 2f));
 	}
 
-	public	void	PlayerCollided() {
-		GetComponent<Collider> ().enabled = false;
-		mANI.SetTrigger ("Eaten");
+	public	override void	PlayerCollided() {
+		base.PlayerCollided ();		//Call Base methods
+		Debug.Log ("PlayerCollided:Crystal");
 	}
 
 	public	void	Eaten() {

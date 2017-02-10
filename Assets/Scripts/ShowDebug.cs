@@ -9,9 +9,6 @@ public class ShowDebug : MonoBehaviour {
 
     Text mText;
 
-    Vector2 mMove = Vector2.zero;
-    Vector2 mRotate = Vector2.zero;
-
     void Start () {
         mText = GetComponent<Text>();        	
 	}

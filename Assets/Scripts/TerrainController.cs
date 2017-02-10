@@ -35,7 +35,11 @@ public class TerrainController : MonoBehaviour {
     }
 
     void NewItem() {
-        GameManager.CreateCrystal();
+		if (GameManager.ObjectCount < 20) {
+			GameManager.CreateCrystal ();
+		} else {
+			Debug.Log ("Object Count exceeded");
+		}
     }
 
 }

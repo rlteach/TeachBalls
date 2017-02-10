@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
+
 
 public class PlayerController : MonoBehaviour {
 
@@ -7,7 +9,7 @@ public class PlayerController : MonoBehaviour {
     public float Sensitivity = 5f;
 
 
-    Rigidbody mRB;
+    Rigidbody mRB;			//RB link
     Vector3 mForce = Vector3.zero;
 
 
@@ -15,7 +17,6 @@ public class PlayerController : MonoBehaviour {
     void Start() {
         mRB = GetComponent<Rigidbody>();        //Get Reference to RB to move it
         GameManager.PC = this;              //Link us into the GameController
-
     }
 
     void    OnDestroy() {
@@ -35,6 +36,7 @@ public class PlayerController : MonoBehaviour {
 
     void Grow() {
         transform.localScale *= 1.02f;
+		mRB.mass *= 1.1f;
     }
 
     void OnCollisionEnter(Collision vCol) {
