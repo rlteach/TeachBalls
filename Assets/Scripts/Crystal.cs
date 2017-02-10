@@ -7,18 +7,15 @@ public class Crystal : TerrainObject {
 
 	public	Color	FromColour;
 	public	Color	ToColour;
-	float	mColour=0.0f;
 
 	protected override void 	Start () {
         base.Start();                       //Ensure base class Start() runs
 		mANI.SetFloat("Speed",Random.Range(0.1f,1.5f));
 	}
 
-
 	public	void	ColourCycle(float vTime) {		//Colour Cycle Crystals
 		mMR.material.color = Vector4.Lerp (FromColour, ToColour, Mathf.Sin (vTime * Mathf.PI * 2f));
 	}
-
 
 	public	void	PlayerCollided() {
 		GetComponent<Collider> ().enabled = false;
@@ -27,5 +24,10 @@ public class Crystal : TerrainObject {
 
 	public	void	Eaten() {
 		Destroy (gameObject);
+        GameManager.DeleteCrystal(this);
 	}
+
+    public override string ToString() {
+        return "Crystal";
+    }
 }
