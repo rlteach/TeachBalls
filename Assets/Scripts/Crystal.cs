@@ -1,21 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Crystal : MonoBehaviour {
+public class Crystal : TerrainObject {
 
 	public	float	KillTime=10.0f;
-
-	Animator	mANI;
-	MeshRenderer mMR;
 
 	public	Color	FromColour;
 	public	Color	ToColour;
 	float	mColour=0.0f;
 
-	// Use this for initialization
-	void 	Start () {
-		mANI = GetComponent<Animator> ();
-		mMR = GetComponent<MeshRenderer> ();
+	protected override void 	Start () {
+        base.Start();                       //Ensure base class Start() runs
 		mANI.SetFloat("Speed",Random.Range(0.1f,1.5f));
 	}
 

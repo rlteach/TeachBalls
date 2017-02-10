@@ -4,10 +4,13 @@ using System.Collections;
 public class GameManager : MonoBehaviour {
 
 	[Header("Prefab links")]
-	public	GameObject	CrystalPrefab;		//Assign Prefab here, must be an asset not be a scene object
+	public	GameObject	CrystalPrefab;      //Assign Prefab here, must be an asset not be a scene object
 
 
-	private	static	GameManager	GM;
+    private PlayerController  mPlayerController;        //Static GM keeps referenced to Key Game Objects
+    private TerrainController mTerrainController;
+
+    private static	GameManager	GM;     //Internal link to GM instance used by static methods
 
 	//Set up game manager singleton
 	void Awake () {
@@ -19,14 +22,37 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
-	static	void	CreateCrystal() {
+    public  static PlayerController PC {            //Set the player controller, so it can access by all
+        get {
+            return GM.mPlayerController;
+        }
+        set {
+            GM.mPlayerController = value;
+        }
+    }
+
+    public static TerrainController TC {       //Allow terrain controller object set/get
+        get {
+            return GM.mTerrainController;
+        }
+
+        set {
+            GM.mTerrainController = value;
+        }
+    }  
+
+	public  static	void	CreateCrystal() {
+        Vector3 tPosition = TC.RandomPosition(PC.transform.position,10f);
+        Crystal mCrystal = TC.SpawnTerrainObject<Crystal>(tPosition, GM.CrystalPrefab);
 	}
 
-	static	void	DeleteCrystal() {
+	public  static	void	DeleteCrystal() {
 	}
 
-	// Update is called once per frame
-	void Update () {
+
+
+    // Update is called once per frame
+    void Update () {
 	
 	}
 }
