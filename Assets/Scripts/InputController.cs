@@ -8,7 +8,7 @@ using System.Collections;
 //Can be attached to a GameObject or will add itself if not
 
 
-public class GameController : MonoBehaviour {
+public class InputController : MonoBehaviour {
 
     public enum Directions { 
         None = 0
@@ -29,7 +29,7 @@ public class GameController : MonoBehaviour {
     private float[] mInputs;        //Array of inputs
 
     //static reference to Game Controller
-    static GameController GC;
+	static InputController IC;
 
     public static uint InputCount {       //Get number of inputs
         get {
@@ -39,25 +39,25 @@ public class GameController : MonoBehaviour {
 
     //Create Singleton
     void Awake() {
-        if (GC == null) {      //If first time keep static reference for easy access
-            GC = this;
+        if (IC == null) {      //If first time keep static reference for easy access
+            IC = this;
             DontDestroyOnLoad(gameObject);      //Keep it around during scene loads
             mInputs = new float[InputCount];        //Make Array for all the inputs I am using
-        } else if (GC != this) {       //if duplicate, kill it
+        } else if (IC != this) {       //if duplicate, kill it
             Destroy(gameObject);
         }
     }
 
     static public float GetInput(Directions vFlag) {       //Read Specific normalised value
-		if (GC == null || GC.gameObject==null) {			//If this has not been added to the scene, add it
+		if (IC == null || IC.gameObject==null) {			//If this has not been added to the scene, add it
 			GameObject	tGO = new GameObject ("GameController");
-			tGO.AddComponent <GameController>();		//Add this script to the GameObject
+			tGO.AddComponent <InputController>();		//Add this script to the GameObject
 			Debug.Log("Auto added GameController on first use");
 		}
 
         uint tIndex = (uint)vFlag;
         if (tIndex < InputCount) {
-            return GC.mInputs[tIndex];           //Get last read value
+            return IC.mInputs[tIndex];           //Get last read value
         }
         return 0f;      //Default if invalid index
     }
