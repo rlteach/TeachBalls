@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour {
 
 	[Header("Prefab links")]
 	public	GameObject	CrystalPrefab;      //Assign Prefab here, must be an asset not be a scene object
+	public	GameObject	RainPrefab;      //Assign Prefab here, must be an asset not be a scene object
 
 
     private PlayerController  mPlayerController;        //Static GM keeps referenced to Key Game Objects
@@ -51,6 +52,13 @@ public class GameManager : MonoBehaviour {
 			return	GM.mTerrainObjectList.Count;
 		}
 	}
+
+	public  static	void	CreateRain() {
+		Vector3 tPosition = TC.RandomPosition(PC.transform.position,30f);
+		tPosition.y = Random.Range (10, 30);
+		Instantiate (GM.RainPrefab, tPosition, Quaternion.identity);
+	}
+
 
 	public  static	void	CreateCrystal() {
         Vector3 tPosition = TC.RandomPosition(PC.transform.position,10f);

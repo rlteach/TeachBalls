@@ -10,6 +10,12 @@ public class TerrainController : MonoBehaviour {
 		mT = GetComponent<Terrain> ();
         GameManager.TC = this;      //Link myself to game Manager
         InvokeRepeating("NewItem", 0, 2f);
+		InvokeRepeating("Rain", 0, 1f);
+	}
+
+
+	void	Rain() {
+		GameManager.CreateRain ();
 	}
 
     void OnDestroy() {

@@ -67,6 +67,7 @@ public class PositionCamera : MonoBehaviour {
 
 	//Update Camera so its pointing at Target, cater for Camara Zoom and Move
     void Update () {
+
 		mPolar.Radius += InputController.GetInput(InputController.Directions.Zoom)*Time.deltaTime*Sensitivity;
 		mPolar.Azimuth +=  InputController.GetInput (InputController.Directions.ShiftMoveX) * Time.deltaTime*Sensitivity*10f;
 		mPolar.Attitude += InputController.GetInput (InputController.Directions.ShiftMoveY) * Time.deltaTime*Sensitivity*10f;

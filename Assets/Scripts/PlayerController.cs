@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour {
     void Start() {
         mRB = GetComponent<Rigidbody>();        //Get Reference to RB to move it
         GameManager.PC = this;              //Link us into the GameController
+		InvokeRepeating("Shrink", 1f,0.5f);
     }
 
     void    OnDestroy() {
@@ -34,9 +35,23 @@ public class PlayerController : MonoBehaviour {
         mRB.AddForce(mForce, ForceMode.Impulse);
     }
 
-    void Grow() {
-        transform.localScale *= 1.02f;
-		mRB.mass *= 1.1f;
+	void	Grow() {
+		Resize (1.2f);
+	}
+
+	void	Shrink() {
+		Resize (0.99f);
+	}
+
+	public	float	Size {
+		get {
+			return transform.localScale.magnitude;
+		}
+	}
+
+	void Resize(float vScale=1.2f) {
+		float	tSize = Mathf.Clamp (Size * vScale, 0.2f, 5f);
+		transform.localScale = transform.localScale.normalized * tSize;
     }
 
     void OnCollisionEnter(Collision vCol) {
