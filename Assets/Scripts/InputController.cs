@@ -8,7 +8,7 @@ using System.Collections;
 //Can be attached to a GameObject or will add itself if not
 
 
-public class InputController : MonoBehaviour {
+public class InputController : Singleton {
 
     public enum Directions { 
         None = 0
@@ -29,7 +29,7 @@ public class InputController : MonoBehaviour {
     private float[] mInputs;        //Array of inputs
 
     //static reference to Game Controller
-	static InputController IC;
+	static InputController sIC;
 
     public static uint InputCount {       //Get number of inputs
         get {
@@ -39,25 +39,21 @@ public class InputController : MonoBehaviour {
 
     //Create Singleton
     void Awake() {
-        if (IC == null) {      //If first time keep static reference for easy access
-            IC = this;
-            DontDestroyOnLoad(gameObject);      //Keep it around during scene loads
+		if(CreateSingleton(ref sIC)) {
             mInputs = new float[InputCount];        //Make Array for all the inputs I am using
-        } else if (IC != this) {       //if duplicate, kill it
-            Destroy(gameObject);
         }
     }
 
     static public float GetInput(Directions vFlag) {       //Read Specific normalised value
-		if (IC == null || IC.gameObject==null) {			//If this has not been added to the scene, add it
-			GameObject	tGO = new GameObject ("GameController");
+		if (sIC == null || sIC.gameObject==null) {			//If this has not been added to the scene, add it
+			GameObject	tGO = new GameObject ("InputController");
 			tGO.AddComponent <InputController>();		//Add this script to the GameObject
-			Debug.Log("Auto added GameController on first use");
+			Debug.Log("Auto added InputController on first use");
 		}
 
         uint tIndex = (uint)vFlag;
         if (tIndex < InputCount) {
-            return IC.mInputs[tIndex];           //Get last read value
+            return sIC.mInputs[tIndex];           //Get last read value
         }
         return 0f;      //Default if invalid index
     }

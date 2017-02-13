@@ -55,10 +55,13 @@ public class PlayerController : MonoBehaviour {
     }
 
     void OnCollisionEnter(Collision vCol) {
-        if (vCol.gameObject.tag == "Crystal") {
-            Crystal tC = vCol.gameObject.GetComponent<Crystal>();
-            tC.PlayerCollided();
-            Invoke("Grow", 0.5f);
-        }
+		if (vCol.gameObject.tag == "Crystal") {
+			Crystal tC = vCol.gameObject.GetComponent<Crystal> ();
+			tC.PlayerCollided ();
+			Invoke ("Grow", 0.5f);
+		} else if (vCol.gameObject.tag == "Rain") {
+			Invoke ("Grow", 0.2f);
+			Destroy (vCol.gameObject);		//Get rid of the rain
+		}
     }
 }
