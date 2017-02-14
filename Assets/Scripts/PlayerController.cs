@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour {
     Rigidbody mRB;			//RB link
     Vector3 mForce = Vector3.zero;
 
+	public	Terrain	Terrain;
 
     // Use this for initialization
     void Start() {
@@ -25,6 +26,8 @@ public class PlayerController : MonoBehaviour {
         Debug.Log("PlayerController Destroyed");
     }
 
+	bool	CanJump=true;
+
     // FixedUpdate is called once per physics frame, this is locked to a fixed framerate
     void FixedUpdate() {
         mForce.x = InputController.GetInput(InputController.Directions.MoveX);
@@ -33,7 +36,13 @@ public class PlayerController : MonoBehaviour {
 		float	tBrake = -InputController.GetInput (InputController.Directions.Brake)+2f;
 		mRB.AddForce(mForce * Sensitivity*(tThrust+tBrake));
         mForce.x = mForce.z = 0f;
-        mForce.y = InputController.GetInput(InputController.Directions.Jump);
+		float	tJump=InputController.GetInput(InputController.Directions.Jump);
+		if(Mathf.Abs(tJump)>0.1f) {
+			if (CanJump) {
+				mForce.y=tJump;
+				CanJump = false;
+			}
+		}
         mRB.AddForce(mForce, ForceMode.Impulse);
     }
 
@@ -64,6 +73,8 @@ public class PlayerController : MonoBehaviour {
 		} else if (vCol.gameObject.tag == "Rain") {
 			Invoke ("Grow", 0.2f);
 			Destroy (vCol.gameObject);		//Get rid of the rain
+		}  else if (vCol.gameObject.tag == "Terrain") {
+			CanJump = true;
 		}
     }
 }
