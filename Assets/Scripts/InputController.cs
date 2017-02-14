@@ -10,6 +10,30 @@ using System.Collections;
 
 public class InputController : Singleton {
 
+	public	readonly	static	string[,]  sJoySticks = new string[,] {
+		{"Joy 1 X","Joy 1 Y"}
+		,{"Joy 2 X","Joy 2 Y"}
+		,{"L Trigger", "R Trigger"}
+	};
+
+	public	readonly	static	string[]  sButtons = new string[] {
+		"A Button"
+		,"B Button"
+		,"Y Button"
+		,"X Button"
+	};
+
+	string	sDebugText;
+
+	public static	string	DebugText {
+		get {
+			if (sIC != null) {
+				return	sIC.sDebugText;
+			}
+			return	"Not initialised";
+		}
+	}
+
     public enum Directions { 
         None = 0
         , MoveX
@@ -85,6 +109,24 @@ public class InputController : Singleton {
         }
     }
 
+
+	Vector2	ReadJoyStick(int vStick) {
+		Vector2	tJoyStick = Vector2.zero;
+		if (vStick < sJoySticks.GetLength (0)) {
+			tJoyStick.x = Input.GetAxis (sJoySticks [vStick, 0]);
+			tJoyStick.y = Input.GetAxis (sJoySticks [vStick, 1]);
+		}
+		return	tJoyStick;
+	}
+
+	bool	ReadButton(int vButton) {
+		if (vButton < sButtons.Length) {
+			return	Input.GetButton (sButtons[vButton]);
+		}
+		return	false;
+	}
+
+
     void Update() {
         UpdateInput();
     }
@@ -92,45 +134,68 @@ public class InputController : Singleton {
     //Read using static public float GetInput(Directions vFlag)
     void UpdateInput() {        //Update Input Array which can be read by all clients
 
+		Vector2	tLeftStick = ReadJoyStick (0);
+		Vector2	tRightStick = ReadJoyStick (1);
+		bool	tUsingJoyStick = false;
 
-		if (Input.GetKey (KeyCode.LeftShift) || Input.GetKey (KeyCode.RightShift)) {
-			if (Input.GetKey (KeyCode.UpArrow)) {        //Map control to game input
-				SetInput (Directions.ShiftMoveY, 1.0f);
-			} else if (Input.GetKey (KeyCode.DownArrow)) {
-				SetInput (Directions.ShiftMoveY, -1.0f);
+		if (tRightStick.sqrMagnitude > Mathf.Epsilon) {
+			SetInput (Directions.ShiftMoveX, tRightStick.x);
+			SetInput (Directions.ShiftMoveY, tRightStick.y);
+			tUsingJoyStick = true;
+		}
+
+		if (tLeftStick.sqrMagnitude > Mathf.Epsilon) {
+			SetInput (Directions.MoveX, tLeftStick.x);
+			SetInput (Directions.MoveY, tLeftStick.y);
+			tUsingJoyStick = true;
+		}
+
+		if (!tUsingJoyStick) {
+			if (Input.GetKey (KeyCode.LeftShift) || Input.GetKey (KeyCode.RightShift)) {
+				if (Input.GetKey (KeyCode.UpArrow)) {        //Map control to game input
+					SetInput (Directions.ShiftMoveY, 1.0f);
+				} else if (Input.GetKey (KeyCode.DownArrow)) {
+					SetInput (Directions.ShiftMoveY, -1.0f);
+				} else {
+					SetInput (Directions.ShiftMoveY, 0f);
+				}
+
+
+				if (Input.GetKey (KeyCode.LeftArrow)) {
+					SetInput (Directions.ShiftMoveX, -1.0f);
+				} else if (Input.GetKey (KeyCode.RightArrow)) {
+					SetInput (Directions.ShiftMoveX, 1.0f);
+				} else {
+					SetInput (Directions.ShiftMoveX, 0f);
+				}
 			} else {
-				SetInput (Directions.ShiftMoveY, 0f);
-			}
+				if (Input.GetKey (KeyCode.UpArrow)) {        //Map control to game input
+					SetInput (Directions.MoveY, 1.0f);
+				} else if (Input.GetKey (KeyCode.DownArrow)) {
+					SetInput (Directions.MoveY, -1.0f);
+				} else {
+					SetInput (Directions.MoveY, 0f);
+				}
 
 
-			if (Input.GetKey (KeyCode.LeftArrow)) {
-				SetInput (Directions.ShiftMoveX, -1.0f);
-			} else if (Input.GetKey (KeyCode.RightArrow)) {
-				SetInput (Directions.ShiftMoveX, 1.0f);
-			} else {
-				SetInput (Directions.ShiftMoveX, 0f);
-			}
-		} else {
-			if (Input.GetKey(KeyCode.UpArrow)) {        //Map control to game input
-				SetInput(Directions.MoveY,1.0f);
-			} else if (Input.GetKey(KeyCode.DownArrow)) {
-				SetInput(Directions.MoveY, -1.0f);
-			} else {
-				SetInput(Directions.MoveY, 0f);
-			}
-
-
-			if (Input.GetKey(KeyCode.LeftArrow)) {
-				SetInput(Directions.MoveX, -1.0f);
-			} else if (Input.GetKey(KeyCode.RightArrow)) {
-				SetInput(Directions.MoveX, 1.0f);
-			} else {
-				SetInput(Directions.MoveX, 0f);
+				if (Input.GetKey (KeyCode.LeftArrow)) {
+					SetInput (Directions.MoveX, -1.0f);
+				} else if (Input.GetKey (KeyCode.RightArrow)) {
+					SetInput (Directions.MoveX, 1.0f);
+				} else {
+					SetInput (Directions.MoveX, 0f);
+				}
 			}
 		}
 
-
-
+		sDebugText = "";
+		for (int tI = 0; tI < sButtons.Length; tI++) {
+			sDebugText+=string.Format("{0} {1}={2}\n",tI,sButtons[tI],ReadButton(tI));
+		}
+		for (int tI = 0; tI < sJoySticks.GetLength(0); tI++) {
+			sDebugText+=string.Format("Stick {0}={1:f2}\n",tI,ReadJoyStick(tI));
+		}
+	
         if (Input.GetKey(KeyCode.Period)) {
             SetInput(Directions.Zoom, -1.0f);
         } else if (Input.GetKey(KeyCode.Comma)) {

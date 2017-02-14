@@ -30,9 +30,9 @@ public class PositionCamera : MonoBehaviour {
 		mPolar.Azimuth +=  InputController.GetInput (InputController.Directions.ShiftMoveX) * Time.deltaTime*Sensitivity*10f;
 		mPolar.Attitude += InputController.GetInput (InputController.Directions.ShiftMoveY) * Time.deltaTime*Sensitivity*10f;
 
-		//mPolar.Radius = Mathf.Clamp (mPolar.Radius, 1.5f, 50f);
-		//mPolar.Azimuth = Mathf.Clamp (mPolar.Azimuth,-135f,135);
-		//mPolar.Attitude = Mathf.Clamp (mPolar.Attitude,5f,45f);
+		mPolar.Radius = Mathf.Clamp (mPolar.Radius, 1.5f, 50f);
+		mPolar.Azimuth = Mathf.Clamp (mPolar.Azimuth,-135f,135);
+		mPolar.Attitude = Mathf.Clamp (mPolar.Attitude,5f,45f);
 
 		Debug.Log (mPolar.ToString ());
 
