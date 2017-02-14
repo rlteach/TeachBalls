@@ -204,13 +204,13 @@ public class InputController : Singleton {
             SetInput(Directions.Zoom, 0f);
         }
 
-		if (Input.GetMouseButton(0)) {
+		if (Input.GetMouseButton(0) || ReadButton(0)) {
 			SetInput(Directions.Fire, 1.0f);
 		} else {
 			SetInput(Directions.Fire, 0f);
 		}
 
-		if (Input.GetKey(KeyCode.Return)) {
+		if (Input.GetKey(KeyCode.Return) || ReadButton(1)) {
             SetInput(Directions.Jump, 1.0f);
         } else {
             SetInput(Directions.Jump, 0f);
