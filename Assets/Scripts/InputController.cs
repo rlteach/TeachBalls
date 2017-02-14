@@ -46,6 +46,8 @@ public class InputController : Singleton {
         , Fire
 		, Jump
         , Count
+		,Thrust
+		,Brake
     }
 
     private Vector3 mLastPosition;      //Use this to work out changes in mouse position
@@ -187,6 +189,10 @@ public class InputController : Singleton {
 				}
 			}
 		}
+
+		Vector2	tThrust = ReadJoyStick (2);
+		SetInput (Directions.Thrust, tThrust.x);
+		SetInput (Directions.Brake, tThrust.y);
 
 		sDebugText = "";
 		for (int tI = 0; tI < sButtons.Length; tI++) {

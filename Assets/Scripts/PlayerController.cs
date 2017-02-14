@@ -29,7 +29,9 @@ public class PlayerController : MonoBehaviour {
     void FixedUpdate() {
         mForce.x = InputController.GetInput(InputController.Directions.MoveX);
         mForce.z = InputController.GetInput(InputController.Directions.MoveY);
-        mRB.AddForce(mForce * Sensitivity);
+		float	tThrust = InputController.GetInput (InputController.Directions.Thrust)+2f;
+		float	tBrake = -InputController.GetInput (InputController.Directions.Brake)+2f;
+		mRB.AddForce(mForce * Sensitivity*(tThrust+tBrake));
         mForce.x = mForce.z = 0f;
         mForce.y = InputController.GetInput(InputController.Directions.Jump);
         mRB.AddForce(mForce, ForceMode.Impulse);
