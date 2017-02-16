@@ -7,6 +7,14 @@ public class Entity : MonoBehaviour {
 
 	private		float mHoverHeight=1f;
 
+	private		Vector3	mDestination;
+
+	public		Vector3	Destination {
+		set {
+			Destination = value;
+		}
+	}
+
 	private		Rigidbody	mRB;
 
 	public	Rigidbody RB {
