@@ -9,14 +9,13 @@ public class PlayerController : MonoBehaviour {
     public float Sensitivity = 5f;
 
 
-    Rigidbody mRB;			//RB link
-    Vector3 mForce = Vector3.zero;
+    CharacterController mCC;			//CC link
 
 	public	Terrain	Terrain;
 
     // Use this for initialization
     void Start() {
-        mRB = GetComponent<Rigidbody>();        //Get Reference to RB to move it
+		mCC = GetComponent<CharacterController>();        //Get Reference to RB to move it
         GameManager.PC = this;              //Link us into the GameController
 		InvokeRepeating("Shrink", 1f,0.5f);
     }
@@ -26,32 +25,43 @@ public class PlayerController : MonoBehaviour {
         Debug.Log("PlayerController Destroyed");
     }
 
-	bool	CanJump=true;
 
     // FixedUpdate is called once per physics frame, this is locked to a fixed framerate
-    void FixedUpdate() {
-        mForce.x = InputController.GetInput(InputController.Directions.MoveX);
-        mForce.z = InputController.GetInput(InputController.Directions.MoveY);
-		float	tThrust = InputController.GetInput (InputController.Directions.Thrust)+2f;
-		float	tBrake = -InputController.GetInput (InputController.Directions.Brake)+2f;
-		mRB.AddForce(mForce * Sensitivity*(tThrust+tBrake));
-        mForce.x = mForce.z = 0f;
-		float	tJump=InputController.GetInput(InputController.Directions.Jump);
-		if(Mathf.Abs(tJump)>0.1f) {
-			if (CanJump) {
-				mForce.y=tJump;
-				CanJump = false;
-			}
-		}
-        mRB.AddForce(mForce, ForceMode.Impulse);
+
+	bool	Dead=false;
+
+    void Update() {
+		MoveCharacter ();
     }
 
+	public	float	MoveSpeed = 10f;
+	Vector3 mMoveDirection = Vector3.zero;
+
+	void MoveCharacter() {          //Move Character with controller
+		if (!Dead) {
+			if (mCC.isGrounded) {
+				transform.Rotate (0, IC.GetInput (IC.Directions.MoveX), 0);
+				mMoveDirection.x = 0f;
+				mMoveDirection.y = 0f;
+				mMoveDirection.z = IC.GetInput (IC.Directions.MoveY);
+				mMoveDirection = transform.TransformDirection (mMoveDirection);      //Move in direction character is facing
+				mMoveDirection *= MoveSpeed;
+				if (IC.GetInput (IC.Directions.Jump) > 0f) {
+					mMoveDirection.y = 10f;        //Jump
+				}
+			}
+			mMoveDirection.y += Physics.gravity.y * Time.deltaTime;
+			mCC.Move (mMoveDirection * Time.deltaTime);
+		}
+	}
+
+
 	void	Grow() {
-		Resize (1.2f);
+	//	Resize (1.2f);
 	}
 
 	void	Shrink() {
-		Resize (0.99f);
+	//	Resize (0.99f);
 	}
 
 	public	float	Size {
@@ -65,7 +75,7 @@ public class PlayerController : MonoBehaviour {
 		transform.localScale = transform.localScale.normalized * tSize;
     }
 
-    void OnCollisionEnter(Collision vCol) {
+	void OnTriggerEnter(Collider vCol)  {
 		if (vCol.gameObject.tag == "Crystal") {
 			Crystal tC = vCol.gameObject.GetComponent<Crystal> ();
 			tC.PlayerCollided ();
@@ -74,7 +84,6 @@ public class PlayerController : MonoBehaviour {
 			Invoke ("Grow", 0.2f);
 			Destroy (vCol.gameObject);		//Get rid of the rain
 		}  else if (vCol.gameObject.tag == "Terrain") {
-			CanJump = true;
 		}
     }
 }

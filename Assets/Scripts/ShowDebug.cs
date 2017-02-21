@@ -16,7 +16,7 @@ public class ShowDebug : MonoBehaviour {
 	//Example of how to read the input from central manager
 	void Update () {
 		mText.text ="Input Debug\n";
-		mText.text += InputController.DebugText;
+		mText.text += IC.DebugText;
 		mText.text +="\nGame Debug\n";
         mText.text += GameManager.DebugText;
     }

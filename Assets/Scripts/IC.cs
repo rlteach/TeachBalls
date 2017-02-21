@@ -8,7 +8,7 @@ using System.Collections;
 //Can be attached to a GameObject or will add itself if not
 
 
-public class InputController : Singleton {
+public class IC : Singleton {
 
 	public	readonly	static	string[,]  sJoySticks = new string[,] {
 		{"Joy 1 X","Joy 1 Y"}
@@ -55,7 +55,7 @@ public class InputController : Singleton {
     private float[] mInputs;        //Array of inputs
 
     //static reference to Game Controller
-	static InputController sIC;
+	static IC sIC;
 
     public static uint InputCount {       //Get number of inputs
         get {
@@ -73,7 +73,7 @@ public class InputController : Singleton {
     static public float GetInput(Directions vFlag) {       //Read Specific normalised value
 		if (sIC == null || sIC.gameObject==null) {			//If this has not been added to the scene, add it
 			GameObject	tGO = new GameObject ("InputController");
-			tGO.AddComponent <InputController>();		//Add this script to the GameObject
+			tGO.AddComponent <IC>();		//Add this script to the GameObject
 			Debug.Log("Auto added InputController on first use");
 		}
 
